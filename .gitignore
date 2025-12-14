@@ -1,0 +1,16 @@
+# Virtual environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# SQLite databases (ignore ALL db files anywhere)
+*.db
+
+# Streamlit
+.streamlit/
+
+# OS files
+Thumbs.db
+.DS_Store
