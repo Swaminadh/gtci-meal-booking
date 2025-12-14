@@ -8,7 +8,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATABASE_DIR = os.path.join(BASE_DIR, "database")
 
 DB_PATH = os.path.join(DATABASE_DIR, "meals.db")
-EMP_XLSX = os.path.join(DATABASE_DIR, "employees_db.xlsx")
+EMP_XLSX = os.path.join(DATABASE_DIR, "employee_db.xlsx")
 
 # ========== DB helpers ==========
 
