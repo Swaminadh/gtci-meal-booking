@@ -13,9 +13,9 @@ EMP_XLSX = os.path.join(DATABASE_DIR, "employee_db.xlsx")
 STORAGE_MODE = "postgres"   # change to "postgres" to use PostgreSQL
 
 if STORAGE_MODE == "postgres":
-    from db_postgres import upsert_meal, get_booking, get_summary, init_db, get_emails_for_date
+    from db_postgres import upsert_meal, get_booking, get_summary, init_db, get_emails_for_date, delete_booking,get_user_bookings
 else:
-    from db_sqlite import upsert_meal, get_booking, get_summary, get_user_bookings, init_db, get_conn, get_emails_for_date
+    from db_sqlite import upsert_meal, get_booking, get_summary, get_user_bookings, init_db, get_conn, get_emails_for_date, delete_booking
 
 
 # def get_booking_for_date(email: str, meal_date_iso: str):
