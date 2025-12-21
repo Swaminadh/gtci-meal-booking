@@ -27,11 +27,8 @@ def init_db():
         """))
 
 def upsert_meal(email, meal_date, opted):
-    """
-    opted can be 1/0 or True/False
-    Convert safely to boolean for PostgreSQL
-    """
-    opted_bool = bool(opted)
+    # 🔥 FORCE boolean conversion (this is the key)
+    opted_bool = True if opted in (1, True, "1", "true", "True") else False
 
     with engine.begin() as conn:
         conn.execute(text("""
@@ -42,7 +39,7 @@ def upsert_meal(email, meal_date, opted):
         """), {
             "email": email,
             "meal_date": meal_date,
-            "opted": opted_bool
+            "opted": opted_bool   # ✅ BOOLEAN ONLY
         })
 
 def get_booking(email, meal_date):
