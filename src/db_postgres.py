@@ -27,6 +27,12 @@ def init_db():
         """))
 
 def upsert_meal(email, meal_date, opted):
+    """
+    opted can be 1/0 or True/False
+    Convert safely to boolean for PostgreSQL
+    """
+    opted_bool = bool(opted)
+
     with engine.begin() as conn:
         conn.execute(text("""
             INSERT INTO meal_orders (email, meal_date, opted)
@@ -36,7 +42,7 @@ def upsert_meal(email, meal_date, opted):
         """), {
             "email": email,
             "meal_date": meal_date,
-            "opted": opted
+            "opted": opted_bool
         })
 
 def get_booking(email, meal_date):
