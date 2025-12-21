@@ -67,3 +67,24 @@ def get_emails_for_date(meal_date):
             ORDER BY email
         """), {"meal_date": meal_date}).fetchall()
     return [r[0] for r in rows]
+
+def get_user_bookings(email):
+    with engine.connect() as conn:
+        rows = conn.execute(text("""
+            SELECT meal_date, opted
+            FROM meal_orders
+            WHERE email = :email
+            ORDER BY meal_date
+        """), {"email": email}).fetchall()
+
+    return rows
+
+def delete_booking(email, meal_date):
+    with engine.begin() as conn:
+        conn.execute(text("""
+            DELETE FROM meal_orders
+            WHERE email = :email AND meal_date = :meal_date
+        """), {
+            "email": email,
+            "meal_date": meal_date
+        })
