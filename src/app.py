@@ -10,84 +10,46 @@ DATABASE_DIR = os.path.join(BASE_DIR, "database")
 DB_PATH = os.path.join(DATABASE_DIR, "meals.db")
 EMP_XLSX = os.path.join(DATABASE_DIR, "employee_db.xlsx")
 
-# ========== DB helpers ==========
+STORAGE_MODE = "postgres"   # change to "postgres" to use PostgreSQL
 
-def get_conn():
-    return sqlite3.connect(DB_PATH, check_same_thread=False)
+if STORAGE_MODE == "postgres":
+    from db_postgres import upsert_meal, get_booking, get_summary, init_db, get_emails_for_date
+else:
+    from db_sqlite import upsert_meal, get_booking, get_summary, get_user_bookings, init_db, get_conn, get_emails_for_date
 
-def init_db():
-    conn = get_conn()
-    cur = conn.cursor()
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS meal_orders (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email TEXT NOT NULL,
-            meal_date DATE NOT NULL,
-            opted INTEGER NOT NULL,           -- 1 = yes, 0 = no
-            UNIQUE(email, meal_date)
-        );
-    """)
-    conn.commit()
-    conn.close()
 
-def upsert_meal(email: str, meal_date_iso: str, opted: int):
-    conn = get_conn()
-    cur = conn.cursor()
-    cur.execute("""
-        INSERT INTO meal_orders (email, meal_date, opted)
-        VALUES (?, ?, ?)
-        ON CONFLICT(email, meal_date)
-        DO UPDATE SET opted=excluded.opted;
-    """, (email, meal_date_iso, opted))
-    conn.commit()
-    conn.close()
+# def get_booking_for_date(email: str, meal_date_iso: str):
+#     conn = get_conn()
+#     cur = conn.cursor()
+#     cur.execute("""
+#         SELECT opted FROM meal_orders
+#         WHERE email = ? AND meal_date = ?;
+#     """, (email, meal_date_iso))
+#     row = cur.fetchone()
+#     conn.close()
+#     if row is None:
+#         return None
+#     return row[0]
 
-def get_booking_for_date(email: str, meal_date_iso: str):
-    conn = get_conn()
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT opted FROM meal_orders
-        WHERE email = ? AND meal_date = ?;
-    """, (email, meal_date_iso))
-    row = cur.fetchone()
-    conn.close()
-    if row is None:
-        return None
-    return row[0]
+# def get_summary_for_date(meal_date_iso: str):
+#     conn = get_conn()
+#     cur = conn.cursor()
+#     cur.execute("""
+#         SELECT email, opted
+#         FROM meal_orders
+#         WHERE meal_date = ? AND opted = 1
+#         ORDER BY email;
+#     """, (meal_date_iso,))
+#     rows_yes = cur.fetchall()
 
-def get_user_bookings(email: str):
-    conn = get_conn()
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT meal_date, opted
-        FROM meal_orders
-        WHERE email = ?
-        ORDER BY meal_date DESC
-        LIMIT 30;
-    """, (email,))
-    rows = cur.fetchall()
-    conn.close()
-    return rows
+#     cur.execute("""
+#         SELECT COUNT(*) FROM meal_orders
+#         WHERE meal_date = ? AND opted = 1;
+#     """, (meal_date_iso,))
+#     (count_yes,) = cur.fetchone()
 
-def get_summary_for_date(meal_date_iso: str):
-    conn = get_conn()
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT email, opted
-        FROM meal_orders
-        WHERE meal_date = ? AND opted = 1
-        ORDER BY email;
-    """, (meal_date_iso,))
-    rows_yes = cur.fetchall()
-
-    cur.execute("""
-        SELECT COUNT(*) FROM meal_orders
-        WHERE meal_date = ? AND opted = 1;
-    """, (meal_date_iso,))
-    (count_yes,) = cur.fetchone()
-
-    conn.close()
-    return count_yes, rows_yes
+#     conn.close()
+#     return count_yes, rows_yes
 
 # ========== Excel-based auth ==========
 
@@ -182,7 +144,8 @@ def show_user_home():
     st.caption(f"Selected date: **{meal_date_str}**")
 
     # 2️⃣ Show current status for that date
-    current_opt = get_booking_for_date(user["email"], meal_date_iso)
+    # current_opt = get_booking_for_date(user["email"], meal_date_iso)
+    current_opt = get_booking(user["email"], meal_date_iso)
 
     if current_opt is None:
         st.info("You have not booked anything for this date yet.")
@@ -202,15 +165,21 @@ def show_user_home():
             upsert_meal(user["email"], meal_date_iso, 0)
             st.info(f"Marked as no meal for {meal_date_str}.")
             st.rerun()
+    # with col3:
+    #     if st.button("Clear choice for this date"):
+    #         # Optional: remove booking entirely
+    #         conn = get_conn()
+    #         cur = conn.cursor()
+    #         cur.execute("DELETE FROM meal_orders WHERE email = ? AND meal_date = ?",
+    #                     (user["email"], meal_date_iso))
+    #         conn.commit()
+    #         conn.close()
+    #         st.info(f"Cleared booking for {meal_date_str}.")
+    #         st.rerun()
+
     with col3:
         if st.button("Clear choice for this date"):
-            # Optional: remove booking entirely
-            conn = get_conn()
-            cur = conn.cursor()
-            cur.execute("DELETE FROM meal_orders WHERE email = ? AND meal_date = ?",
-                        (user["email"], meal_date_iso))
-            conn.commit()
-            conn.close()
+            delete_booking(user["email"], meal_date_iso)
             st.info(f"Cleared booking for {meal_date_str}.")
             st.rerun()
 
@@ -244,14 +213,15 @@ def show_admin_home():
     meal_date_iso = picked.isoformat()
     meal_date_str = picked.strftime("%d-%m-%Y")
 
-    count_yes, rows_yes = get_summary_for_date(meal_date_iso)
+    count_yes = get_summary(meal_date_iso)
+    emails = get_emails_for_date(meal_date_iso)
 
     st.metric(label=f"Total meals for {meal_date_str}", value=count_yes)
 
     if count_yes > 0:
         st.markdown("#### Emails opted for meal")
-        df = pd.DataFrame(rows_yes, columns=["Email", "Opted"])
-        df = df.drop(columns=["Opted"])
+        df = pd.DataFrame(emails, columns=["Email"])
+        # df = df.drop(columns=["Opted"])
         st.dataframe(df, use_container_width=True)
     else:
         st.info("No one has booked a meal for this date yet.")
