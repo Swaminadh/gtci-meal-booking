@@ -2,7 +2,8 @@
 * { box-sizing:border-box; }
 /* .actions etc. set display:flex, which otherwise beats the browser's default [hidden] rule */
 [hidden] { display:none !important; }
-body { margin:0; font-family:Calibri,sans-serif; color:var(--ink); background:var(--canvas); }
+html { overflow-x:hidden; }
+body { margin:0; font-family:Calibri,sans-serif; color:var(--ink); background:var(--canvas); overflow-x:hidden; }
 body.login-bg { min-height:100vh; position:relative; background:#0b1c42 url('images/GY_Homepage_up.png') center/cover no-repeat; }
 body.login-bg .site-header { display:none; }
 body.login-bg .container { position:absolute; bottom:40%; right:11%; margin:0; width:min(440px,80vw); padding:0; }
@@ -26,11 +27,11 @@ h1 { font-size:1.75rem; margin:0; white-space:nowrap; } h2,h3 { margin-top:0; } 
 #login-view .button { background:#ffc20e; color:#0b1c42; padding:14px; border-radius:12px; font-size:1.05rem; }
 .narrow { max-width:420px; margin:0; text-align:center; }
 .narrow form { text-align:left; }
-label { display:block; font-weight:700; margin:14px 0 6px; } input { width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:7px; font:inherit; }
-input[type="date"] { min-height:42px; } input[type="date"]::-webkit-calendar-picker-indicator { opacity:1; filter:none; }
+label { display:block; font-weight:700; margin:14px 0 6px; } input { width:100%; max-width:100%; min-width:0; padding:10px 12px; border:1px solid var(--line); border-radius:7px; font:inherit; font-size:16px; }
+input[type="date"] { min-height:42px; max-width:100%; } input[type="date"]::-webkit-calendar-picker-indicator { opacity:1; filter:none; }
 .button { border:0; border-radius:7px; background:var(--brand); color:#fff; padding:10px 15px; font:inherit; font-weight:700; cursor:pointer; }
 form .button { margin-top:18px; width:100%; }.button-secondary { background:#e7eee9; color:var(--ink); }.button-text { background:transparent; color:var(--brand); padding-left:0; }.button.active { outline:3px solid #bbf7d0; }
-.actions { flex-wrap:wrap; margin-top:20px; }.mode-switch { display:flex; gap:8px; }.message { min-height:1.25rem; color:var(--muted); }.message.error { color:#b91c1c; }.muted { color:var(--muted); margin:0; }.week-days { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-top:14px; }.week-day { padding:10px; border:1px solid var(--line); border-radius:7px; }.week-day label { font-size:.85rem; margin:0 0 7px; }.week-day select { width:100%; padding:7px; border:1px solid var(--line); border-radius:5px; }.report-controls { align-items:end; flex-wrap:wrap; }.report-controls div { flex:1 1 170px; }.total { font-size:1.1rem; font-weight:bold; }.table-wrap { overflow-x:auto; } table { width:100%; border-collapse:collapse; } th,td { text-align:left; padding:10px 8px; border-bottom:1px solid var(--line); } th { color:var(--muted); font-size:.85rem; }
+.actions { flex-wrap:wrap; margin-top:20px; }.mode-switch { display:flex; gap:8px; }.message { min-height:1.25rem; color:var(--muted); }.message.error { color:#b91c1c; }.muted { color:var(--muted); margin:0; }.week-days { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-top:14px; }.week-day { padding:10px; border:1px solid var(--line); border-radius:7px; min-width:0; }.week-day label { font-size:.85rem; margin:0 0 7px; }.week-day select { width:100%; max-width:100%; padding:7px; border:1px solid var(--line); border-radius:5px; font-size:16px; }.report-controls { align-items:end; flex-wrap:wrap; }.report-controls div { flex:1 1 170px; min-width:0; }.total { font-size:1.1rem; font-weight:bold; }.table-wrap { overflow-x:auto; } table { width:100%; border-collapse:collapse; } th,td { text-align:left; padding:10px 8px; border-bottom:1px solid var(--line); } th { color:var(--muted); font-size:.85rem; }
 #login-view .message { color:#b9c4e6; }
 @media (max-width:600px) { .week-days { grid-template-columns:1fr; }.site-header { align-items:flex-start; }.card { padding:18px; } body.login-bg { background-size:contain; background-position:top center; background-repeat:no-repeat; } body.login-bg .container { position:static; transform:none; width:auto; padding:24px; display:flex; justify-content:center; margin-top:62vw; } }
 @media (max-width:420px) { h1 { font-size:1.35rem; } .title-icon { width:32px; height:32px; } .brand { gap:6px; } }
