@@ -15,3 +15,8 @@ __pycache__/
 Thumbs.db
 .DS_Store
 .streamlit/secrets.toml
+
+# Local-only roster exports (not read by any code; keep off GitHub for privacy)
+database/employee_db.csv
+database/employees_import.csv
+

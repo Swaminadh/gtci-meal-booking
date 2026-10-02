@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Book your office meal.">
+    <title>Book Your Meal</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%B2%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles.css?v=16">
+  </head>
+  <body class="login-bg">
+    <main class="container">
+      <header class="site-header">
+        <div class="brand">
+          <img src="assets/images/Meal_GY.png" alt="" class="title-icon">
+          <h1>Book Your Meal</h1>
+        </div>
+        <button id="logout-button" class="button button-secondary" hidden>Change email</button>
+      </header>
+
+      <section id="login-view" class="card narrow">
+        <h2>Welcome</h2>
+        <p>Login to book your meals.</p>
+        <form id="login-form">
+          <div class="input-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Z" fill="currentColor"/></svg>
+            <input id="email" type="email" autocomplete="email" required placeholder="you@company.com">
+          </div>
+          <button class="button" type="submit">Continue</button>
+          <p id="login-message" class="message" role="alert"></p>
+        </form>
+      </section>
+
+      <section id="employee-view" hidden>
+        <div class="welcome-row">
+          <div><h2 id="employee-name"></h2><p id="employee-email" class="muted"></p></div>
+        </div>
+        <section class="card">
+          <h3>📅 Book a meal</h3>
+          <div class="mode-switch" role="group" aria-label="Booking mode">
+            <button class="button button-secondary active" data-mode="day" type="button">Daily</button>
+            <button class="button button-secondary" data-mode="week" type="button">Weekly</button>
+          </div>
+          <div id="day-picker">
+            <label for="meal-date">Select date</label>
+            <input id="meal-date" type="date">
+          </div>
+          <div id="week-picker" hidden>
+            <label for="week-start">Week starting</label>
+            <input id="week-start" type="date">
+            <p class="muted">Choose your meal preference for each workday, then save.</p>
+            <div id="week-days" class="week-days"></div>
+          </div>
+          <div id="day-actions" class="actions">
+            <button class="button" data-choice="booked" type="button">✅ Yes, book meal</button>
+            <button class="button button-secondary" data-choice="declined" type="button">🚫 No meal</button>
+            <button class="button button-text" data-choice="clear" type="button">Clear choice</button>
+          </div>
+          <div id="week-actions" class="actions" hidden>
+            <button id="save-week" class="button" type="button">✅ Save week</button>
+          </div>
+          <p id="booking-message" class="message" role="status"></p>
+        </section>
+        <section class="card">
+          <h3>🕒 Your upcoming bookings</h3>
+          <div class="table-wrap"><table><thead><tr><th>Date</th><th>Meal</th></tr></thead><tbody id="upcoming-bookings"></tbody></table></div>
+        </section>
+      </section>
+
+      <section id="admin-view" hidden>
+        <div class="welcome-row"><div><h2>🧾 Admin meal report</h2><p id="admin-email" class="muted"></p></div></div>
+        <section class="card">
+          <div class="report-controls">
+            <div><label for="report-start">From</label><input id="report-start" type="date"></div>
+            <div><label for="report-end">To</label><input id="report-end" type="date"></div>
+            <button id="load-report" class="button" type="button">Load report</button>
+            <button id="download-report" class="button button-secondary" type="button">Download CSV</button>
+          </div>
+          <p id="report-total" class="total" aria-live="polite"></p>
+          <div class="table-wrap"><table><thead id="report-head"><tr><th>Name</th><th>Email</th></tr></thead><tbody id="report-rows"></tbody></table></div>
+          <p id="report-message" class="message" role="status"></p>
+        </section>
+      </section>
+    </main>
+    <script type="module" src="js/app.js?v=6"></script>
+  </body>
+</html>

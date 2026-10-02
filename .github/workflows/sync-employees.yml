@@ -1,0 +1,30 @@
+name: Sync employee roster to Supabase
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - database/employee_db.xlsx
+      - scripts/import_employees.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install roster import dependencies
+        run: pip install pandas openpyxl
+      - name: Sync approved employees
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+        run: python scripts/import_employees.py
