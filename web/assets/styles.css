@@ -131,8 +131,22 @@ input {
   font: inherit; font-size: 16px; /* 16px prevents iOS zoom-on-focus */
   background: var(--paper); color: var(--ink);
 }
-input[type="date"] { min-height: 44px; max-width: 100%; cursor: pointer; }
+input[type="date"] {
+  display: block;      /* Safari iOS needs this to respect width:100% */
+  width: 100%;
+  min-height: 44px;
+  max-width: 100%;
+  cursor: pointer;
+}
 input[type="date"]::-webkit-calendar-picker-indicator { opacity: 1; filter: none; cursor: pointer; }
+
+/* Picker containers must not let date inputs overflow */
+#day-picker, #week-picker { overflow: hidden; }
+#day-picker input, #week-picker > input { display: block; width: 100%; }
+
+/* Report control date wrappers */
+.report-controls > div { min-width: 0; overflow: hidden; }
+.report-controls > div input { display: block; width: 100%; }
 select {
   font: inherit; font-size: 16px; /* prevents iOS zoom */
   width: 100%; max-width: 100%; min-width: 0;
