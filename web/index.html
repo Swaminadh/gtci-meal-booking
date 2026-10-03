@@ -2,36 +2,45 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="description" content="Book your office meal.">
     <title>Book Your Meal</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%B2%3C/text%3E%3C/svg%3E">
+    <!-- (1) Intro: hide page until overlay is ready. Failsafe: reveal after 4s even if JS fails. -->
+    <script>
+      document.documentElement.classList.add('gy-pending');
+      setTimeout(function(){document.documentElement.classList.remove('gy-pending','gy-playing')},4000);
+    </script>
+    <link rel="stylesheet" href="assets/gy-intro.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/styles.css?v=21">
+    <link rel="stylesheet" href="assets/styles.css?v=23">
   </head>
-  <body class="login-bg">
+  <body>
     <main class="container">
       <header class="site-header">
         <div class="brand">
           <img src="assets/images/Meal_GY.png" alt="" class="title-icon">
           <h1>Book Your Meal</h1>
         </div>
-        <button id="logout-button" class="button button-secondary" hidden>Change email</button>
+        <button id="logout-button" class="button button-secondary" hidden>Logout</button>
       </header>
 
       <section id="login-view" class="card narrow">
-        <h2>Welcome</h2>
-        <p>Login to book your meals.</p>
-        <form id="login-form">
-          <div class="input-icon">
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Z" fill="currentColor"/></svg>
-            <input id="email" type="email" autocomplete="email" required placeholder="you@company.com">
-          </div>
-          <button class="button" type="submit">Continue</button>
-          <p id="login-message" class="message" role="alert"></p>
-        </form>
+        <div class="login-card-header">
+          <img src="assets/images/goodyear-logo.png" alt="Goodyear" class="login-logo">
+        </div>
+        <div class="login-card-body">
+          <h2>Sign in</h2>
+          <p>Book your meals for the week.</p>
+          <form id="login-form">
+            <label for="email">Employee Email</label>
+            <input id="email" type="email" autocomplete="email" required placeholder="you@goodyear.com">
+            <button class="button login-btn" type="submit">Sign in</button>
+            <p id="login-message" class="message" role="alert"></p>
+          </form>
+        </div>
       </section>
 
       <section id="employee-view" hidden>
@@ -86,5 +95,11 @@
       </section>
     </main>
     <script type="module" src="js/app.js?v=6"></script>
+    <!-- (2) Intro script: last thing before </body> -->
+    <script src="js/gy-intro.js" defer
+            data-logo="assets/images/goodyear-logo.png"
+            data-focus="#email"
+            data-caption="Meal Booking"
+            data-once="false"></script>
   </body>
 </html>
