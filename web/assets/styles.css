@@ -196,12 +196,13 @@ form .button { margin-top: 16px; width: 100%; }
 
 /* ─── Report controls ───────────────────────────────────────────────────── */
 .report-controls {
-  display: flex; align-items: flex-end;
-  flex-wrap: wrap; gap: 10px; row-gap: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  align-items: end;
   margin-bottom: 12px;
 }
-.report-controls > div { flex: 1 1 140px; min-width: 0; }
-.report-controls .button { flex-shrink: 0; }
+.report-controls .button { grid-column: span 1; }
 .total { font-size: 1.05rem; font-weight: bold; margin-bottom: 8px; }
 
 /* ─── Table ─────────────────────────────────────────────────────────────── */
@@ -232,10 +233,9 @@ td { word-break: break-word; }
   .week-day label { margin: 0; flex: 0 0 110px; font-size: .9rem; }
   .week-day select { flex: 1; }
 
-  /* report controls: stack the date range + buttons */
-  .report-controls { flex-direction: column; align-items: stretch; }
-  .report-controls > div { flex: none; }
-  .report-controls .button { width: 100%; }
+  /* report controls: dates side by side, buttons full width below */
+  .report-controls { grid-template-columns: 1fr 1fr; }
+  .report-controls .button { grid-column: span 2; }
 
   /* login card edge-to-edge on small phones */
   body.login-bg .container { padding: 12px; }
